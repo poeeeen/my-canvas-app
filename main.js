@@ -62,12 +62,17 @@ function listSavedCanvases() {
   const listEl = document.getElementById('canvas-list');
   listEl.innerHTML = '';
 
+  const filter = document.getElementById("search-canvas")?.value.toLowerCase() || ''; // ← 追加
+
   const grouped = {};
 
   Object.keys(localStorage).forEach(key => {
     if (key.startsWith('canvas_')) {
       const id = key.replace('canvas_', '');
       const category = localStorage.getItem('category_' + id) || 'Uncategorized';
+
+      // 🔍 フィルターに一致しないキャンバスはスキップ
+      if (!id.toLowerCase().includes(filter)) return;
 
       if (!grouped[category]) grouped[category] = [];
       grouped[category].push(id);
@@ -89,7 +94,6 @@ function listSavedCanvases() {
       link.innerText = id;
       li.appendChild(link);
 
-      // 削除ボタン（再利用）
       const del = document.createElement('button');
       del.innerText = '🗑';
       del.style.marginLeft = '10px';
@@ -108,6 +112,7 @@ function listSavedCanvases() {
     listEl.appendChild(ul);
   });
 }
+
 
 
 // 起動時に表示
