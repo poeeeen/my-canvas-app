@@ -58,11 +58,13 @@ window.onload = () => {
   const id = getCanvasID();
   loadCanvas(id);
 };
+
+
 function listSavedCanvases() {
   const listEl = document.getElementById('canvas-list');
   listEl.innerHTML = '';
 
-  const filter = document.getElementById("search-canvas")?.value.toLowerCase() || ''; // ← 追加
+  const filter = document.getElementById("search-canvas")?.value.toLowerCase() || '';
 
   const grouped = {};
 
@@ -71,7 +73,7 @@ function listSavedCanvases() {
       const id = key.replace('canvas_', '');
       const category = localStorage.getItem('category_' + id) || 'Uncategorized';
 
-      // 🔍 フィルターに一致しないキャンバスはスキップ
+      // 🔍 完全一致 or 部分一致しない場合はスキップ
       if (!id.toLowerCase().includes(filter)) return;
 
       if (!grouped[category]) grouped[category] = [];
@@ -79,7 +81,7 @@ function listSavedCanvases() {
     }
   });
 
-  // 表示：カテゴリごとにまとめて出力
+  // カテゴリごとに出力（該当キャンバスだけが残っている）
   Object.keys(grouped).forEach(category => {
     const h4 = document.createElement('h4');
     h4.innerText = `📁 ${category}`;
@@ -112,6 +114,7 @@ function listSavedCanvases() {
     listEl.appendChild(ul);
   });
 }
+
 
 
 
