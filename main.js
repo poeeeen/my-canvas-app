@@ -52,3 +52,39 @@ window.onload = () => {
   const id = getCanvasID();
   loadCanvas(id);
 };
+function listSavedCanvases() {
+  const listEl = document.getElementById('canvas-list');
+  listEl.innerHTML = '';
+
+  Object.keys(localStorage).forEach(key => {
+    if (key.startsWith('canvas_')) {
+      const id = key.replace('canvas_', '');
+      const li = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = `?canvas=${id}`;
+      link.innerText = id;
+      li.appendChild(link);
+
+      // 削除ボタン（任意）
+      const del = document.createElement('button');
+      del.innerText = '🗑';
+      del.style.marginLeft = '10px';
+      del.onclick = () => {
+        if (confirm(`Delete canvas "${id}"?`)) {
+          localStorage.removeItem(key);
+          listSavedCanvases();
+        }
+      };
+
+      li.appendChild(del);
+      listEl.appendChild(li);
+    }
+  });
+}
+
+// 起動時に表示
+window.onload = () => {
+  const id = getCanvasID();
+  loadCanvas(id);
+  listSavedCanvases();
+};
