@@ -13,10 +13,15 @@ function loadCanvas(id) {
 
 function save() {
   const id = getCanvasID();
-  const value = document.getElementById('canvas-editor').value;
+  const value = document.getElementById("canvas-editor").value;
+  const category = document.getElementById("canvas-category").value || 'Uncategorized';
+
   localStorage.setItem('canvas_' + id, value);
+  localStorage.setItem('category_' + id, category); // ←カテゴリ保存
+
   alert('Saved!');
 }
+
 
 function copyURL() {
   const id = getCanvasID();
@@ -56,31 +61,53 @@ function listSavedCanvases() {
   const listEl = document.getElementById('canvas-list');
   listEl.innerHTML = '';
 
+  const grouped = {};
+
   Object.keys(localStorage).forEach(key => {
     if (key.startsWith('canvas_')) {
       const id = key.replace('canvas_', '');
+      const category = localStorage.getItem('category_' + id) || 'Uncategorized';
+
+      if (!grouped[category]) grouped[category] = [];
+      grouped[category].push(id);
+    }
+  });
+
+  // 表示：カテゴリごとにまとめて出力
+  Object.keys(grouped).forEach(category => {
+    const h4 = document.createElement('h4');
+    h4.innerText = `📁 ${category}`;
+    listEl.appendChild(h4);
+
+    const ul = document.createElement('ul');
+
+    grouped[category].forEach(id => {
       const li = document.createElement('li');
       const link = document.createElement('a');
       link.href = `?canvas=${id}`;
       link.innerText = id;
       li.appendChild(link);
 
-      // 削除ボタン（任意）
+      // 削除ボタン（再利用）
       const del = document.createElement('button');
       del.innerText = '🗑';
       del.style.marginLeft = '10px';
       del.onclick = () => {
         if (confirm(`Delete canvas "${id}"?`)) {
-          localStorage.removeItem(key);
+          localStorage.removeItem('canvas_' + id);
+          localStorage.removeItem('category_' + id);
           listSavedCanvases();
         }
       };
 
       li.appendChild(del);
-      listEl.appendChild(li);
-    }
+      ul.appendChild(li);
+    });
+
+    listEl.appendChild(ul);
   });
 }
+
 
 // 起動時に表示
 window.onload = () => {
