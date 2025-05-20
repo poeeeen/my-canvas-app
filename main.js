@@ -88,3 +88,16 @@ window.onload = () => {
   loadCanvas(id);
   listSavedCanvases();
 };
+function saveSnapshot() {
+  const id = getCanvasID();
+  const content = document.getElementById("canvas-editor").value;
+  const now = new Date();
+  const timestamp = now.toISOString().replace(/[:.]/g, "-").slice(0, 16); // YYYY-MM-DDTHH-MM
+  const filename = `${id}_${timestamp}.txt`;
+
+  const blob = new Blob([content], { type: "text/plain" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
