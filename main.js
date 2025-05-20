@@ -157,3 +157,19 @@ function saveSnapshot() {
   a.download = filename;
   a.click();
 }
+function copyForGPT() {
+  const content = document.getElementById("canvas-editor").value;
+  navigator.clipboard.writeText(content).then(() => {
+    alert("✅ キャンバスの内容をクリップボードにコピーしました！\nGPTにそのままペーストできます！");
+  });
+}
+
+function exportForGPT() {
+  const id = getCanvasID();
+  const content = document.getElementById("canvas-editor").value;
+  const blob = new Blob([content], { type: "text/plain" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `for-gpt_${id}.txt`;
+  a.click();
+}
