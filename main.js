@@ -96,6 +96,26 @@ function listSavedCanvases() {
       link.innerText = id;
       li.appendChild(link);
 
+      const rename = document.createElement('button');
+rename.innerText = '✏️';
+rename.style.marginLeft = '10px';
+rename.onclick = () => {
+  const newId = prompt(`Rename "${id}" to:`, id);
+  if (!newId || newId === id) return;
+
+  // 上書き確認も必要なら後で追加可
+  const value = localStorage.getItem('canvas_' + id);
+  const category = localStorage.getItem('category_' + id);
+  localStorage.setItem('canvas_' + newId, value);
+  localStorage.setItem('category_' + newId, category);
+  localStorage.removeItem('canvas_' + id);
+  localStorage.removeItem('category_' + id);
+
+  listSavedCanvases(); // 再描画
+};
+
+li.appendChild(rename);
+
       const del = document.createElement('button');
       del.innerText = '🗑';
       del.style.marginLeft = '10px';
