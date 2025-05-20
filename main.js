@@ -20,6 +20,7 @@ function save() {
   localStorage.setItem('category_' + id, category); // ←カテゴリ保存
 
   alert('Saved!');
+  listSavedCanvases();  // ← ✅ これを最後に追加！
 }
 
 
